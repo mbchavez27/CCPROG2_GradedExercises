@@ -187,7 +187,7 @@ int main() {
      in the display which row or column or box the
      wrong solution was [first] detected.
   */
-  if (rowsStatus && colsStatus && boxStatus)
+  if (isFailed)
     printf("Sudoku!\n");
   else
     printf("Wrong Solution\n");

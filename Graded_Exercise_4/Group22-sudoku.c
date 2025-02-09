@@ -9,14 +9,19 @@
 
                    Complete the main program based on the
                    comments indicated.
+
+
 */
 
-int isInRange(int num) {
-  if (num >= 1 && num <= 9)
-    return 1;
-  else
-    return 0;
-}
+/*
+ S11B - Grp22
+
+ Max Chavez
+ Charles Cordez
+ Carl Crespo
+ */
+
+int isInRange(int num) { return (num >= 1 && num <= 9); }
 
 void getInput(int aMatrix[][SIZE]) {
   int input = 0;
@@ -65,14 +70,13 @@ void displayAll(int aMatrix[][SIZE]) {
 
 int checkrow(int aData[]) {
   int item = 0;
-  int checkedRow = 0;
-  int isFound = 1;
-  for (item = 0; item < SIZE && isFound; item++) {
-    if (isInRange(aData[item])) {
-      checkedRow = 1;
-    } else {
-      checkedRow = 0;
-      isFound = 0;
+  int duplicateItem = 0;
+  int checkedRow = 1;
+  for (item = 0; item < SIZE; item++) {
+    for (duplicateItem = item + 1; duplicateItem < SIZE; duplicateItem++) {
+      if (aData[item] == aData[duplicateItem]) {
+        checkedRow = 0;
+      }
     }
   }
 
@@ -81,15 +85,13 @@ int checkrow(int aData[]) {
 
 int checkcol(int aMatrix[][SIZE], int nColInd) {
   int item = 0;
-  int checkedCol = 0;
-  int isFound = 1;
-
-  for (item = 0; item < SIZE && isFound; item++) {
-    if (isInRange(aMatrix[item][nColInd])) {
-      checkedCol = 1;
-    } else {
-      checkedCol = 0;
-      isFound = 0;
+  int duplicateItem = 0;
+  int checkedCol = 1;
+  for (item = 0; item < SIZE; item++) {
+    for (duplicateItem = item + 1; duplicateItem < SIZE; duplicateItem++) {
+      if (aMatrix[item][nColInd] == aMatrix[duplicateItem][nColInd]) {
+        checkedCol = 0;
+      }
     }
   }
   return checkedCol;
@@ -98,15 +100,18 @@ int checkcol(int aMatrix[][SIZE], int nColInd) {
 int checkbox(int aMatrix[][SIZE], int nRow, int nCol) {
   int row = 0;
   int col = 0;
-  int checkedBox = 0;
-  int isFound = 1;
-  for (row = nRow; row < (nRow + 2) && isFound; row++) {
-    for (col = nCol; col < (nCol + 2) && isFound; col++) {
-      if (isInRange(aMatrix[row][col])) {
-        checkedBox = 1;
-      } else {
-        checkedBox = 0;
-        isFound = 0;
+  int dRow = 0;
+  int dCol = 0;
+  int checkedBox = 1;
+  for (row = nRow; row < (nRow + 3); row++) {
+    for (col = nCol; col < (nCol + 3); col++) {
+      for (dRow = nRow; dRow < (nRow + 3); dRow++) {
+        for (dCol = nCol; dCol < (nCol + 3); dCol++) {
+          if ((row != dRow || col != dCol) &&
+              aMatrix[row][col] == aMatrix[dRow][dCol]) {
+            checkedBox = 0;
+          }
+        }
       }
     }
   }
@@ -116,6 +121,14 @@ int checkbox(int aMatrix[][SIZE], int nRow, int nCol) {
 int main() {
   int aMatrix[SIZE][SIZE];
   /* you can add your own variables */
+  int allRows = 0;
+  int rowsStatus = 0;
+  int allCols = 0;
+  int colsStatus = 0;
+  int boxRow = 0;
+  int boxCol = 0;
+  int boxStatus = 0;
+  int isFailed = 1;
 
   /* call getInput().  It is encouraged that you use
      input redirection, so you do not need to keep
@@ -133,10 +146,10 @@ int main() {
   /* call function checkrow() multiple times in loop.
      Note that checkrow() will check one row at a time.
   */
-  int allRows = 0;
-  int rowsStatus = 0;
-  for (allRows = 0; allRows < SIZE; allRows++) {
+  for (allRows = 0; allRows < SIZE && isFailed; allRows++) {
     rowsStatus = checkrow(aMatrix[allRows]);
+    if (!rowsStatus)
+      isFailed = 0;
   }
 
   /* write your condition to execute the following only
@@ -144,12 +157,13 @@ int main() {
      checkcol() mutiple times in a loop. checkcol() will
      check one column at a time.
   */
-  int allCols = 0;
-  int colsStatus = 0;
 
   if (rowsStatus) {
-    for (allCols = 0; allCols < SIZE; allCols++) {
+    for (allCols = 0; allCols < SIZE && isFailed; allCols++) {
       colsStatus = checkcol(aMatrix, allCols);
+
+      if (!colsStatus)
+        isFailed = 0;
     }
   }
 
@@ -158,13 +172,13 @@ int main() {
      function checkbox() mutiple times as the function will
      check one 3x3 box at a time.
   */
-  int boxRow = 0;
-  int boxCol = 0;
-  int boxStatus = 0;
   if (rowsStatus && colsStatus) {
-    for (boxRow = 0; boxRow < SIZE; boxRow += 3) {
-      boxCol = boxRow;
-      boxStatus = checkbox(aMatrix, boxRow, boxCol);
+    for (boxRow = 0; boxRow < SIZE && isFailed; boxRow += 3) {
+      for (boxCol = 0; boxCol < SIZE && isFailed; boxCol += 3) {
+        boxStatus = checkbox(aMatrix, boxRow, boxCol);
+        if (!boxStatus)
+          isFailed = 0;
+      }
     }
   }
   /* if the matrix is a correctly solved Sudoku puzzle,
@@ -174,7 +188,7 @@ int main() {
      wrong solution was [first] detected.
   */
   if (rowsStatus && colsStatus && boxStatus)
-    printf("Sodoku!\n");
+    printf("Sudoku!\n");
   else
     printf("Wrong Solution\n");
 

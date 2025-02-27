@@ -41,29 +41,6 @@ typedef struct {
   Rating rating;
 } Candidate;
 
-void toLower(char *word) {
-  int length = strlen(word);
-  int i = 0;
-
-  for (i = 0; i < length; i++) {
-    if (word[i] >= 'A' && word[i] <= 'Z')
-      word[i] += 32;
-  }
-}
-
-int search(String25 parties[], char *party, int numOfParties) {
-  int found = 0;
-  int i = 0;
-
-  for (i = 0; i < numOfParties && !found; i++) {
-    if (strcmp(parties[i], party) == 0) {
-      found = 1;
-    }
-  }
-
-  return found;
-}
-
 void convertMonthtoWord(int month) {
   switch (month) {
   case 1:
@@ -165,13 +142,6 @@ void getRating(Rating *rating) {
   getDate(&rating->date);
 }
 
-void addParties(String25 parties[], Candidate candidate, int *numOfParties) {
-  if (!search(parties, candidate.party, *numOfParties)) {
-    strcpy(parties[*numOfParties], candidate.party);
-    (*numOfParties)++;
-  }
-}
-
 void getInput(Candidate *candidate, String25 parties[], int *numOfParties) {
   int i = 0;
   int stop = 0;
@@ -188,7 +158,6 @@ void getInput(Candidate *candidate, String25 parties[], int *numOfParties) {
   printf("Give Party: ");
   scanf("%s", input);
   strcpy(candidate->party, input);
-  addParties(parties, *candidate, numOfParties);
   while (i < MAX_BILLS && !stop) {
     char input[2];
     getBill(&candidate->billsPassed[candidate->numOfBillsPassed]);
@@ -215,6 +184,11 @@ void displayBill(Bill bill[], int numOfBillsPassed) {
     displayDate(bill[i].date);
   }
 }
+
+void sortAlphabetical() {}
+
+void displaybyRating() {}
+void displayPartes(Candidate candidates[], char *party) {}
 
 void display(Candidate candidate) {
   printf("Candidate: \n");

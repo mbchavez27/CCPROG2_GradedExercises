@@ -51,6 +51,19 @@ void toLower(char *word) {
   }
 }
 
+int search(String25 parties[], char *party, int numOfParties) {
+  int found = 0;
+  int i = 0;
+
+  for (i = 0; i < numOfParties && !found; i++) {
+    if (strcmp(parties[i], party) == 0) {
+      found = 1;
+    }
+  }
+
+  return found;
+}
+
 void convertMonthtoWord(int month) {
   switch (month) {
   case 1:
@@ -152,7 +165,14 @@ void getRating(Rating *rating) {
   getDate(&rating->date);
 }
 
-void getInput(Candidate *candidate) {
+void addParties(String25 parties[], Candidate candidate, int *numOfParties) {
+  if (!search(parties, candidate.party, *numOfParties)) {
+    strcpy(parties[*numOfParties], candidate.party);
+    (*numOfParties)++;
+  }
+}
+
+void getInput(Candidate *candidate, String25 parties[], int *numOfParties) {
   int i = 0;
   int stop = 0;
   String25 input;
@@ -168,6 +188,7 @@ void getInput(Candidate *candidate) {
   printf("Give Party: ");
   scanf("%s", input);
   strcpy(candidate->party, input);
+  addParties(parties, *candidate, numOfParties);
   while (i < MAX_BILLS && !stop) {
     char input[2];
     getBill(&candidate->billsPassed[candidate->numOfBillsPassed]);
@@ -223,6 +244,8 @@ void swapCandidates(Candidate *candidate1, Candidate *candidate2) {
 
 int main() {
   Candidate candidates[MAX_CANDIDATES];
+  String25 parties[MAX_CANDIDATES];
+  int numOfParties = 0;
   int numOfCandidates = 0;
   int input;
 
@@ -240,7 +263,7 @@ int main() {
 
     switch (input) {
     case 1:
-      getInput(&candidates[numOfCandidates]);
+      getInput(&candidates[numOfCandidates], parties, &numOfParties);
       numOfCandidates++;
       break;
 

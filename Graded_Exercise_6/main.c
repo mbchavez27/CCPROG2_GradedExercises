@@ -185,13 +185,38 @@ void displayBill(Bill bill[], int numOfBillsPassed) {
   }
 }
 
-void sortAlphabetical() {}
+void swapCandidates(Candidate *candidate1, Candidate *candidate2) {
+  Candidate temp = *candidate1;
+  *candidate1 = *candidate2;
+  *candidate2 = temp;
+}
 
-void displaybyRating() {}
-void displayPartes(Candidate candidates[], char *party) {}
+void sortAlphabetical(Candidate candidate[], int numOfCandidates) {
+  int i = 0;
+  int j = 0;
 
-void display(Candidate candidate) {
-  printf("Candidate: \n");
+  for (i = 0; i < numOfCandidates - 1; i++) {
+    for (j = i + 1; j < numOfCandidates; j++) {
+      if (strcmp(candidate[i].name.lastName, candidate[j].name.lastName) > 0)
+        swapCandidates(&candidate[i], &candidate[j]);
+    }
+  }
+}
+
+void sortByRating(Candidate candidate[], int numOfCandidates) {
+  int i = 0;
+  int j = 0;
+
+  for (i = 0; i < numOfCandidates - 1; i++) {
+    for (j = i + 1; j < numOfCandidates; j++) {
+      if (candidate[i].rating.percentage < candidate[j].rating.percentage)
+        swapCandidates(&candidate[i], &candidate[j]);
+    }
+  }
+}
+
+void display(Candidate candidate, int numOfCandidates) {
+  printf("Candidate: %d\n", numOfCandidates + 1);
   printf("Name: %s %s. %s\n", candidate.name.firstName,
          candidate.name.middleInitial, candidate.name.lastName);
   printf("Birthday: ");
@@ -210,10 +235,32 @@ void display(Candidate candidate) {
   printf("\n\n");
 }
 
-void swapCandidates(Candidate *candidate1, Candidate *candidate2) {
-  Candidate temp = *candidate1;
-  *candidate1 = *candidate2;
-  *candidate2 = temp;
+void displaybyRating(Candidate candidate[], int numOfCandidates) {
+  int i = 0;
+  sortByRating(candidate, numOfCandidates);
+  for (i = 0; i < numOfCandidates; i++)
+    display(candidate[i], i);
+}
+
+void displaybyParty(Candidate candidate[], char *party, int numOfCandidates) {
+  int i = 0;
+  int stop = 0;
+  while (i < numOfCandidates && !stop) {
+    char input[2];
+    if (strcmp(candidate[i].party, party) == 0) {
+      display(candidate[i], i);
+    }
+    // printf("Next candidate: [any key]");
+    // scanf(" %c", input);
+    i++;
+  }
+}
+
+void displayAllCandidates(Candidate candidate[], int numOfCandidates) {
+  int i = 0;
+  sortAlphabetical(candidate, numOfCandidates);
+  for (i = 0; i < numOfCandidates; i++)
+    display(candidate[i], i);
 }
 
 int main() {
@@ -242,12 +289,17 @@ int main() {
       break;
 
     case 2:
-      int i = 0;
-      for (i = 0; i < numOfCandidates; i++) {
-        display(candidates[i]);
-      }
+      displayAllCandidates(candidates, numOfCandidates);
       break;
-
+    case 3:
+      displaybyRating(candidates, numOfCandidates);
+      break;
+    case 4:
+      String25 input;
+      printf("Give Party: \n");
+      scanf("%s", input);
+      displaybyParty(candidates, input, numOfCandidates);
+      break;
     case 5:
       printf("GoodBye!\n");
       break;

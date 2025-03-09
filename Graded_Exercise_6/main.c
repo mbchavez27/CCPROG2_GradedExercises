@@ -145,10 +145,11 @@ void getRating(Rating *rating)
   scanf("%d", &inputInt);
   rating->possibleVotes = inputInt;
 
-  rating->percentage = rating->confidenceVotes / rating->possibleVotes;
+  rating->percentage = (rating->confidenceVotes / rating->possibleVotes) * 100;
 
   printf("Give Organization Name: ");
-  scanf("%s", input);
+  scanf(" ");
+  scanf("%[^\n]", input);
   strcpy(rating->orgName, input);
 
   printf("Give Date of Survey:\n");
@@ -171,7 +172,8 @@ void getInput(Candidate *candidate, String25 parties[], int *numOfParties)
   scanf("%[^\n]", input);
   strcpy(candidate->position, input);
   printf("Give Party: ");
-  scanf("%s", input);
+  scanf(" ");
+  scanf("%[^\n]", input);
   strcpy(candidate->party, input);
   while (i < MAX_BILLS && !stop)
   {
@@ -198,6 +200,7 @@ void displayBill(Bill bill[], int numOfBillsPassed)
   int i = 0;
   for (i = 0; i < numOfBillsPassed; i++)
   {
+    printf("#%d\n", i + 1);
     printf("Bill Passed: %s\n", bill[i].content);
     printf("Date Passed: ");
     displayDate(bill[i].date);
@@ -258,6 +261,7 @@ void display(Candidate candidate, int numOfCandidates)
   printf("Percentage: %.2f%%\n", candidate.rating.percentage);
   printf("Organization who Administered the Survey: %s\n",
          candidate.rating.orgName);
+  printf("Organized during the date:");
   displayDate(candidate.rating.date);
   printf("\n\n");
 }
